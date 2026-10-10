@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>AVR Pro Studios — Create. Draw. Inspire.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== CINEMATIC SPLASH ===== -->
+  <div class="splash" id="splash">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-logo-wrap">
+        <svg class="splash-logo" viewBox="0 0 240 240">
+          <defs>
+            <linearGradient id="avrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0ea5e9"/>
+              <stop offset="50%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#a855f7" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+          <!-- Outer ring -->
+          <circle cx="120" cy="120" r="105" fill="none" stroke="url(#ringGrad)" stroke-width="2" class="ring-outer"/>
+          <circle cx="120" cy="120" r="88" fill="none" stroke="url(#avrGrad)" stroke-width="3" class="ring-inner" stroke-dasharray="550" stroke-dashoffset="550"/>
+          <!-- Glow -->
+          <circle cx="120" cy="120" r="80" fill="url(#ringGrad)" opacity="0.06" class="glow"/>
+          <!-- AVR Text -->
+          <text x="120" y="140" text-anchor="middle" font-size="78" font-weight="900" fill="url(#avrGrad)" font-family="Arial Black, sans-serif" letter-spacing="2">AVR</text>
+        </svg>
+      </div>
+      <h1 class="splash-title">AVR Pro Studios</h1>
+      <p class="splash-tagline">Create. Draw. Inspire.</p>
+      <div class="splash-loader">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="splash-footer">© AVR Pro Studios — v2.0</div>
+  </div>
+
+  <!-- ===== MAIN APP ===== -->
+  <div class="app" id="app">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="logo-mark">
+          <svg viewBox="0 0 60 60" width="34" height="34">
+            <defs>
+              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0ea5e9"/>
+                <stop offset="100%" stop-color="#a855f7"/>
+              </linearGradient>
+            </defs>
+            <circle cx="30" cy="30" r="27" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+            <text x="30" y="38" text-anchor="middle" font-size="22" font-weight="900" fill="url(#logoGrad)" font-family="Arial Black, sans-serif">AVR</text>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">AVR <span>Pro Studios</span></div>
+          <div class="brand-sub">Design Suite</div>
+        </div>
+      </div>
+
+      <div class="topbar-center">
+        <div class="status-chip" id="statusChip">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeBtn" title="Toggle Theme">🌗</button>
+        <button class="icon-btn" id="helpBtn" title="Help">❓</button>
+        <div class="menu-toggle" id="menuToggle">☰</div>
+      </div>
+    </header>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-scroll">
+        <div class="side-section">
+          <div class="side-title">Draw</div>
+          <button id="brushBtn" class="tool-btn active" data-tip="Brush (B)"><span>🖌️</span></button>
+          <button id="pencilBtn" class="tool-btn" data-tip="Pencil (N)"><span>✏️</span></button>
+          <button id="markerBtn" class="tool-btn" data-tip="Marker (M)"><span>🖍️</span></button>
+          <button id="eraserBtn" class="tool-btn" data-tip="Eraser (E)"><span>🧽</span></button>
+          <button id="sprayBtn" class="tool-btn" data-tip="Spray (P)"><span>💨</span></button>
+          <button id="neonBtn" class="tool-btn" data-tip="Neon (G)"><span>💡</span></button>
+        </div>
+
+        <div class="side-section">
+          <div class="side-title">Shapes</div>
+          <button id="lineBtn" class="tool-btn" data-tip="Line (L)"><span>📏</span></button>
+          <button id="rectBtn" class="tool-btn" data-tip="Rectangle (R)"><span>▭</span></button>
+          <button id="circleBtn" class="tool-btn" data-tip="Circle (C)"><span>⭕</span></button>
+          <button id="triangleBtn" class="tool-btn" data-tip="Triangle (T)"><span>🔺</span></button>
+          <button id="starBtn" class="tool-btn" data-tip="Star (S)"><span>⭐</span></button>
+          <button id="arrowBtn" class="tool-btn" data-tip="Arrow (A)"><span>➡️</span></button>
+          <button id="hexagonBtn" class="tool-btn" data-tip="Hexagon (H)"><span>⬡</span></button>
+          <button id="diamondBtn" class="tool-btn" data-tip="Diamond (D)"><span>💎</span></button>
+        </div>
+
+        <div class="side-section">
+          <div class="side-title">Tools</div>
+          <button id="fillBtn" class="tool-btn" data-tip="Fill (F)"><span>🪣</span></button>
+          <button id="textBtn" class="tool-btn" data-tip="Text (X)"><span>🔤</span></button>
+          <button id="pickerBtn" class="tool-btn" data-tip="Color Picker (I)"><span>🎯</span></button>
+          <button id="selectBtn" class="tool-btn" data-tip="Select (V)"><span>⬚</span></button>
+        </div>
+
+        <div class="side-section">
+          <div class="side-title">History</div>
+          <button id="undoBtn" class="tool-btn" data-tip="Undo (Ctrl+Z)"><span>↶</span></button>
+          <button id="redoBtn" class="tool-btn" data-tip="Redo (Ctrl+Y)"><span>↷</span></button>
+          <button id="clearBtn" class="tool-btn danger" data-tip="Clear All"><span>🗑️</span></button>
+        </div>
+
+        <div class="side-section">
+          <div class="side-title">Export</div>
+          <button id="downloadBtn" class="tool-btn success" data-tip="Download PNG"><span>💾</span></button>
+          <button id="saveJsonBtn" class="tool-btn" data-tip="Save Project"><span>📁</span></button>
+          <button id="loadJsonBtn" class="tool-btn" data-tip="Load Project"><span>📂</span></button>
+          <button id="importBtn" class="tool-btn" data-tip="Import Image"><span>🖼️</span></button>
+          <button id="shareBtn" class="tool-btn" data-tip="Share"><span>🔗</span></button>
+        </div>
+
+        <div class="side-section">
+          <div class="side-title">View</div>
+          <button id="gridBtn" class="tool-btn" data-tip="Grid"><span>▦</span></button>
+          <button id="mirrorBtn" class="tool-btn" data-tip="Mirror"><span>↔️</span></button>
+          <button id="fullscreenBtn" class="tool-btn" data-tip="Fullscreen"><span>⛶</span></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CANVAS AREA -->
+    <main class="canvas-wrapper" id="canvasWrapper">
+      <canvas id="canvas"></canvas>
+
+      <div class="floating-hint" id="floatingHint">💡 Tip: Use keyboard shortcuts for faster drawing</div>
+
+      <!-- Text Popup -->
+      <div class="text-popup" id="textPopup">
+        <input type="text" id="textInput" placeholder="Type something..." autocomplete="off">
+        <button id="textOk">✓ Add</button>
+      </div>
+
+      <!-- Zoom Controls -->
+      <div class="zoom-controls">
+        <button id="zoomOut">−</button>
+        <span id="zoomLevel">100%</span>
+        <button id="zoomIn">+</button>
+        <button id="zoomReset">⟲</button>
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel" id="rightPanel">
+      <div class="panel-scroll">
+
+        <div class="panel-section">
+          <div class="panel-title">🎨 Color</div>
+          <label class="color-display" id="colorDisplay">
+            <input type="color" id="colorPicker" value="#0ea5e9">
+            <span class="color-hex" id="colorHex">#0EA5E9</span>
+          </label>
+          <div class="palette" id="palette">
+            <button class="swatch" data-color="#000000" style="background:#000000"></button>
+            <button class="swatch" data-color="#ffffff" style="background:#ffffff"></button>
+            <button class="swatch" data-color="#e74c3c" style="background:#e74c3c"></button>
+            <button class="swatch" data-color="#e67e22" style="background:#e67e22"></button>
+            <button class="swatch" data-color="#f1c40f" style="background:#f1c40f"></button>
+            <button class="swatch" data-color="#2ecc71" style="background:#2ecc71"></button>
+            <button class="swatch" data-color="#3498db" style="background:#3498db"></button>
+            <button class="swatch" data-color="#9b59b6" style="background:#9b59b6"></button>
+            <button class="swatch" data-color="#e91e63" style="background:#e91e63"></button>
+            <button class="swatch" data-color="#795548" style="background:#795548"></button>
+            <button class="swatch" data-color="#607d8b" style="background:#607d8b"></button>
+            <button class="swatch" data-color="#00bcd4" style="background:#00bcd4"></button>
+            <button class="swatch" data-color="#ff5722" style="background:#ff5722"></button>
+            <button class="swatch" data-color="#8bc34a" style="background:#8bc34a"></button>
+            <button class="swatch" data-color="#673ab7" style="background:#673ab7"></button>
+            <button class="swatch" data-color="#ffc107" style="background:#ffc107"></button>
+            <button class="swatch" data-color="#06b6d4" style="background:#06b6d4"></button>
+            <button class="swatch" data-color="#ec4899" style="background:#ec4899"></button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-title">
+            📏 Brush Size
+            <span class="value-pill" id="sizeLabel">5</span>
+          </div>
+          <input type="range" id="sizePicker" min="1" max="100" value="5">
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-title">
+            💧 Opacity
+            <span class="value-pill" id="opacityLabel">100</span>
+          </div>
+          <input type="range" id="opacityPicker" min="1" max="100" value="100">
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-title">🖼️ Canvas BG</div>
+          <div class="bg-grid">
+            <button class="bg-btn active" data-bg="#ffffff" style="background:#ffffff"></button>
+            <button class="bg-btn" data-bg="#000000" style="background:#000000"></button>
+            <button class="bg-btn" data-bg="#f8fafc" style="background:#f8fafc"></button>
+            <button class="bg-btn" data-bg="#fef3c7" style="background:#fef3c7"></button>
+            <button class="bg-btn" data-bg="#dbeafe" style="background:#dbeafe"></button>
+            <button class="bg-btn" data-bg="#dcfce7" style="background:#dcfce7"></button>
+            <button class="bg-btn" data-bg="#fce7f3" style="background:#fce7f3"></button>
+            <button class="bg-btn" data-bg="#1e293b" style="background:#1e293b"></button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-title">⌨️ Shortcuts</div>
+          <div class="shortcut-list">
+            <div><span>Brush</span><kbd>B</kbd></div>
+            <div><span>Pencil</span><kbd>N</kbd></div>
+            <div><span>Marker</span><kbd>M</kbd></div>
+            <div><span>Eraser</span><kbd>E</kbd></div>
+            <div><span>Line</span><kbd>L</kbd></div>
+            <div><span>Rect</span><kbd>R</kbd></div>
+            <div><span>Circle</span><kbd>C</kbd></div>
+            <div><span>Fill</span><kbd>F</kbd></div>
+            <div><span>Undo</span><kbd>Ctrl+Z</kbd></div>
+            <div><span>Save</span><kbd>Ctrl+S</kbd></div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- BOTTOM BAR -->
+    <footer class="bottombar">
+      <div class="bottom-left">
+        <div class="info-chip">🎨 <span id="toolName">Brush</span></div>
+        <div class="info-chip">📍 <span id="coords">0, 0</span></div>
+        <div class="info-chip">📐 <span id="canvasSize">1200 × 750</span></div>
+      </div>
+      <div class="bottom-right">
+        <span class="credit">Crafted with <span class="heart">❤</span> by <b>AVR Pro Studios</b></span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- HELP MODAL -->
+  <div class="modal" id="helpModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>AVR Pro Studios — Help</h2>
+        <button class="modal-close" id="helpClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <h3>🎨 Tools</h3>
+        <p>Choose tools from the left sidebar. Each tool has unique behavior — Brush for smooth lines, Pencil for sharp edges, Marker for bold strokes, Neon for glowing effects.</p>
+        <h3>⌨️ Shortcuts</h3>
+        <p>Press <kbd>B</kbd> Brush, <kbd>N</kbd> Pencil, <kbd>M</kbd> Marker, <kbd>E</kbd> Eraser, <kbd>L</kbd> Line, <kbd>R</kbd> Rect, <kbd>C</kbd> Circle, <kbd>F</kbd> Fill.</p>
+        <h3>💾 Save & Load</h3>
+        <p>Download PNG or save project as .json to edit later. Import any image to draw over it.</p>
+        <h3>✨ Pro Tips</h3>
+        <ul>
+          <li>Enable <b>Mirror Mode</b> for symmetric designs</li>
+          <li>Use <b>Neon</b> tool for glowing effects</li>
+          <li>Adjust <b>Opacity</b> for layered drawings</li>
+          <li>Use <b>Zoom</b> controls for precision work</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden inputs -->
+  <input type="file" id="fileJsonInput" accept=".json" style="display:none">
+  <input type="file" id="fileImageInput" accept="image/*" style="display:none">
+
+  <script src="script.js"></script>
+</body>
+</html>
