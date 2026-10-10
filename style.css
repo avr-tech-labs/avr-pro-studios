@@ -71,7 +71,6 @@ html, body {
 }
 
 .splash-content { position: relative; text-align: center; z-index: 2; }
-
 .splash-logo-wrap { position: relative; display: inline-block; }
 
 .splash-logo {
@@ -274,23 +273,17 @@ html, body {
   cursor: pointer;
   font-size: 15px;
   transition: all 0.2s;
-}
-
-.icon-btn:hover { background: var(--bg-hover); transform: translateY(-1px); }
-
-.menu-toggle {
-  display: none;
-  font-size: 20px;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--bg-card);
-  cursor: pointer;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ========== SIDEBAR ========== */
+.icon-btn:hover { background: var(--bg-hover); transform: translateY(-1px); }
+
+/* Toggle buttons only on mobile */
+.tools-btn, .settings-btn { display: none; }
+
+/* ========== SIDEBAR (TOOLS) ========== */
 .sidebar {
   grid-area: left;
   background: var(--bg-panel);
@@ -512,7 +505,7 @@ canvas {
   font-variant-numeric: tabular-nums;
 }
 
-/* ========== RIGHT PANEL ========== */
+/* ========== RIGHT PANEL (SETTINGS) ========== */
 .right-panel {
   grid-area: right;
   background: var(--bg-panel);
@@ -717,8 +710,6 @@ kbd {
   font-weight: 600;
 }
 
-.info-chip:hover { background: var(--bg-hover); color: var(--accent); }
-
 .credit b {
   background: var(--gradient);
   -webkit-background-clip: text;
@@ -757,10 +748,7 @@ kbd {
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(6px);
-  animation: fadeIn 0.3s;
 }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .modal-card {
   position: relative;
@@ -820,28 +808,22 @@ kbd {
   line-height: 1.6;
 }
 
-.modal-body h3 {
-  color: var(--accent);
-  font-size: 13px;
-  margin: 14px 0 6px;
-}
-
+.modal-body h3 { color: var(--accent); font-size: 13px; margin: 14px 0 6px; }
 .modal-body h3:first-child { margin-top: 0; }
 .modal-body ul { padding-left: 20px; margin-top: 6px; }
 .modal-body li { margin-bottom: 4px; }
 
 /* ============================================================
-   RESPONSIVE BREAKPOINTS
+   RESPONSIVE
    ============================================================ */
 
-/* Tablets */
 @media (max-width: 1000px) and (min-width: 769px) {
   .app { grid-template-columns: 56px 1fr 230px; }
   .tool-btn { width: 40px; height: 40px; font-size: 17px; }
   .brand-name { font-size: 14px; }
 }
 
-/* ========== MOBILE PORTRAIT & SMALL SCREENS ========== */
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .app {
     grid-template-columns: 1fr;
@@ -852,7 +834,22 @@ kbd {
       "bottom";
   }
 
-  /* Sidebar becomes top-slide-down panel */
+  /* Show tools/settings toggle buttons */
+  .tools-btn, .settings-btn { display: flex; }
+
+  .tools-btn.active {
+    background: var(--gradient);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
+  }
+
+  .settings-btn.active {
+    background: var(--gradient-2);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+  }
+
+  /* TOOLS SIDEBAR — slide down from top */
   .sidebar {
     position: fixed;
     top: 52px;
@@ -860,14 +857,14 @@ kbd {
     right: 0;
     bottom: auto;
     width: 100%;
-    max-height: 70vh;
-    z-index: 90;
-    transform: translateY(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    max-height: 68vh;
+    z-index: 95;
+    transform: translateY(-120%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
     border-right: none;
     border-bottom: 2px solid var(--accent);
-    border-radius: 0 0 16px 16px;
+    border-radius: 0 0 18px 18px;
     background: rgba(15, 23, 42, 0.98);
     backdrop-filter: blur(16px);
   }
@@ -880,9 +877,9 @@ kbd {
     flex-wrap: wrap;
     justify-content: center;
     align-content: flex-start;
-    padding: 10px 8px;
+    padding: 12px 10px;
     gap: 8px;
-    max-height: 70vh;
+    max-height: 68vh;
   }
 
   .side-section {
@@ -890,21 +887,21 @@ kbd {
     flex-wrap: wrap;
     justify-content: center;
     border-bottom: none;
-    padding: 4px 6px;
-    border-right: 1px solid var(--border);
-    border-radius: 8px;
-    background: rgba(30, 41, 59, 0.4);
+    padding: 6px 8px;
+    border-radius: 12px;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    gap: 6px;
   }
-
-  .side-section:last-child { border-right: none; }
 
   .side-title {
     width: 100%;
     text-align: center;
     margin-bottom: 4px;
+    font-size: 9px;
   }
 
-  /* Right panel becomes bottom-slide-up */
+  /* SETTINGS PANEL — slide up from bottom */
   .right-panel {
     position: fixed;
     top: auto;
@@ -913,13 +910,13 @@ kbd {
     right: 0;
     width: 100%;
     max-height: 65vh;
-    z-index: 91;
-    transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.7);
+    z-index: 96;
+    transform: translateY(120%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.8);
     border-left: none;
     border-top: 2px solid var(--accent-2);
-    border-radius: 16px 16px 0 0;
+    border-radius: 18px 18px 0 0;
     background: rgba(15, 23, 42, 0.98);
     backdrop-filter: blur(16px);
   }
@@ -931,8 +928,6 @@ kbd {
     padding: 14px;
   }
 
-  .menu-toggle { display: flex; }
-
   .tool-btn { width: 46px; height: 46px; font-size: 20px; }
   .tool-btn::after { display: none; }
 
@@ -940,7 +935,7 @@ kbd {
   .brand-sub { display: none; }
   .brand-name { font-size: 15px; }
 
-  /* CRITICAL: Canvas fills screen on mobile */
+  /* Canvas fills screen */
   .canvas-wrapper {
     padding: 4px;
     align-items: stretch;
@@ -951,8 +946,6 @@ kbd {
     width: 100% !important;
     height: 100% !important;
     border-radius: 4px;
-    max-width: 100%;
-    max-height: 100%;
   }
 
   .floating-hint { display: none; }
@@ -970,18 +963,15 @@ kbd {
   .info-chip { padding: 2px 7px; font-size: 9px; }
   .credit { display: none; }
 
-  /* Splash responsive */
   .splash-logo { width: 140px; height: 140px; }
   .splash-title { font-size: 24px; }
   .splash-tagline { font-size: 10px; letter-spacing: 3px; }
 }
 
-/* Extra small phones */
 @media (max-width: 400px) {
   .tool-btn { width: 42px; height: 42px; font-size: 18px; }
   .canvas-wrapper { padding: 2px; }
   .icon-btn { width: 32px; height: 32px; font-size: 13px; }
-  .menu-toggle { width: 32px; height: 32px; font-size: 18px; }
   .brand-name { font-size: 13px; }
   .logo-mark svg { width: 28px; height: 28px; }
 }
@@ -997,8 +987,7 @@ kbd {
       "bottom bottom bottom";
   }
 
-  .sidebar,
-  .right-panel {
+  .sidebar, .right-panel {
     position: static;
     transform: none;
     width: auto;
@@ -1012,11 +1001,11 @@ kbd {
   }
 
   .sidebar-scroll { flex-direction: column; flex-wrap: nowrap; padding: 6px 4px; }
-  .side-section { flex-direction: column; border-right: none; border-bottom: 1px solid var(--border); }
+  .side-section { flex-direction: column; border-right: none; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; }
   .side-section:last-child { border-bottom: none; }
   .tool-btn { width: 36px; height: 36px; font-size: 15px; }
   .tool-btn::after { display: none; }
-  .menu-toggle { display: none; }
+  .tools-btn, .settings-btn { display: none; }
 
   .panel-scroll { padding: 10px; }
   .panel-section { margin-bottom: 10px; }
