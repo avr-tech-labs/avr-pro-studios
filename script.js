@@ -1,12 +1,11 @@
 /* ============================================================
-   AVR PRO STUDIOS — Premium Drawing Suite
-   © AVR Pro Studios
+   AVR PRO STUDIOS — Premium Drawing Suite v2.1
    ============================================================ */
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// DOM refs
+// DOM
 const splash = document.getElementById('splash');
 const colorPicker = document.getElementById('colorPicker');
 const colorHex = document.getElementById('colorHex');
@@ -23,22 +22,23 @@ const statusText = document.getElementById('statusText');
 const textPopup = document.getElementById('textPopup');
 const textInput = document.getElementById('textInput');
 const textOk = document.getElementById('textOk');
-const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const rightPanel = document.getElementById('rightPanel');
 const zoomLevel = document.getElementById('zoomLevel');
-const zoomIn = document.getElementById('zoomIn');
-const zoomOut = document.getElementById('zoomOut');
-const zoomReset = document.getElementById('zoomReset');
+const zoomInBtn = document.getElementById('zoomIn');
+const zoomOutBtn = document.getElementById('zoomOut');
+const zoomResetBtn = document.getElementById('zoomReset');
 const helpBtn = document.getElementById('helpBtn');
 const helpModal = document.getElementById('helpModal');
 const helpClose = document.getElementById('helpClose');
 const themeBtn = document.getElementById('themeBtn');
+const toolsToggle = document.getElementById('toolsToggle');
+const settingsToggle = document.getElementById('settingsToggle');
 
 const fileJsonInput = document.getElementById('fileJsonInput');
 const fileImageInput = document.getElementById('fileImageInput');
 
-// Tool buttons map
+// Tool buttons
 const toolBtns = {
   brush: document.getElementById('brushBtn'),
   pencil: document.getElementById('pencilBtn'),
@@ -82,7 +82,6 @@ let mirrorMode = false;
 let gridVisible = false;
 let sprayInterval = null;
 let zoom = 1;
-let currentColor = '#0ea5e9';
 
 const undoStack = [];
 const redoStack = [];
@@ -95,31 +94,25 @@ window.addEventListener('load', () => {
   saveHistory();
 });
 
-/* ========== RESIZE — FULL SCREEN FIX ========== */
+/* ========== RESIZE ========== */
 function resizeCanvas() {
   const wrapper = canvas.parentElement;
   const isMobile = window.innerWidth <= 768;
-  const isLandscape = window.innerHeight < window.innerWidth;
 
-  // Padding inside wrapper
   const padX = isMobile ? 8 : 40;
   const padY = isMobile ? 8 : 40;
 
   const availableW = wrapper.clientWidth - padX;
   const availableH = wrapper.clientHeight - padY;
 
-  // Get device pixel ratio for crisp rendering
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-  // Canvas CSS size (fills available space)
   let cssW, cssH;
 
   if (isMobile) {
-    // On mobile: fill the entire wrapper (100%)
     cssW = availableW;
     cssH = availableH;
   } else {
-    // On desktop: maintain 16:10 ratio
     const ratio = 16 / 10;
     cssW = availableW;
     cssH = cssW / ratio;
@@ -129,22 +122,16 @@ function resizeCanvas() {
     }
   }
 
-  // Save existing drawing
   const old = canvas.width > 0 ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
 
-  // Set actual canvas resolution (with DPR for retina crispness)
   canvas.width = Math.floor(cssW * dpr);
   canvas.height = Math.floor(cssH * dpr);
-
-  // Set CSS size
   canvas.style.width = Math.floor(cssW) + 'px';
   canvas.style.height = Math.floor(cssH) + 'px';
 
-  // Fill white background
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Restore old drawing scaled
   if (old) {
     const t = document.createElement('canvas');
     t.width = old.width;
@@ -156,6 +143,11 @@ function resizeCanvas() {
   drawGrid();
   canvasSize.textContent = `${Math.floor(cssW)} × ${Math.floor(cssH)}`;
 }
+
+window.addEventListener('resize', () => {
+  clearTimeout(window._rz);
+  window._rz = setTimeout(resizeCanvas, 250);
+});
 
 /* ========== GRID ========== */
 function drawGrid() {
@@ -250,7 +242,6 @@ function getStyle() {
     color: tool === 'eraser' ? '#ffffff' : colorPicker.value,
     width: parseInt(sizePicker.value),
     alpha: opacityPicker.value / 100,
-    tool,
   };
 }
 
@@ -282,20 +273,19 @@ function startDrawing(e) {
     return;
   }
 
-  if (tool === 'brush' || tool === 'pencil' || tool === 'marker' || tool === 'eraser' || tool === 'neon') {
+  if (['brush', 'pencil', 'marker', 'eraser', 'neon'].includes(tool)) {
     const s = getStyle();
     const dotR = tool === 'marker' ? s.width * 0.6 : s.width / 2;
     ctx.globalAlpha = s.alpha;
     ctx.beginPath();
     ctx.arc(pos.x, pos.y, dotR, 0, Math.PI * 2);
     ctx.fillStyle = s.color;
-    ctx.fill();
     if (tool === 'neon') {
       ctx.shadowColor = s.color;
       ctx.shadowBlur = 20;
-      ctx.fill();
-      ctx.shadowBlur = 0;
     }
+    ctx.fill();
+    ctx.shadowBlur = 0;
     if (mirrorMode) {
       ctx.beginPath();
       ctx.arc(canvas.width - pos.x, pos.y, dotR, 0, Math.PI * 2);
@@ -339,7 +329,7 @@ function draw(e) {
     ctx.shadowBlur = 25;
   }
 
-  if (tool === 'brush' || tool === 'pencil' || tool === 'marker' || tool === 'eraser' || tool === 'neon') {
+  if (['brush', 'pencil', 'marker', 'eraser', 'neon'].includes(tool)) {
     drawStroke(lastX, lastY, pos.x, pos.y);
     if (mirrorMode) drawStroke(canvas.width - lastX, lastY, canvas.width - pos.x, pos.y);
     lastX = pos.x; lastY = pos.y;
@@ -493,12 +483,17 @@ function selectTool(t) {
   Object.values(toolBtns).forEach(b => b?.classList.remove('active'));
   toolBtns[t]?.classList.add('active');
   toolName.textContent = toolNames[t] || t;
-  canvas.style.cursor = t === 'text' ? 'text' : (t === 'picker' ? 'crosshair' : 'crosshair');
+  canvas.style.cursor = t === 'text' ? 'text' : 'crosshair';
   setStatus(toolNames[t]);
 }
 
 Object.entries(toolBtns).forEach(([name, btn]) => {
-  btn?.addEventListener('click', () => selectTool(name));
+  btn?.addEventListener('click', () => {
+    selectTool(name);
+    if (window.innerWidth <= 768) {
+      setTimeout(closeAllPanels, 220);
+    }
+  });
 });
 
 /* ========== COLOR PICKER TOOL ========== */
@@ -517,8 +512,8 @@ function showTextPopup(e) {
   if (e.touches?.length) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
   else { cx = e.clientX; cy = e.clientY; }
   const wrapperRect = canvas.parentElement.getBoundingClientRect();
-  textPopup.style.left = (cx - wrapperRect.left) + 'px';
-  textPopup.style.top = (cy - wrapperRect.top) + 'px';
+  textPopup.style.left = Math.max(10, cx - wrapperRect.left) + 'px';
+  textPopup.style.top = Math.max(10, cy - wrapperRect.top) + 'px';
   textPopup.classList.add('show');
   textInput.value = '';
   setTimeout(() => textInput.focus(), 100);
@@ -553,7 +548,6 @@ opacityPicker.addEventListener('input', () => opacityLabel.textContent = opacity
 function updateColorDisplay(hex) {
   colorHex.textContent = hex.toUpperCase();
   colorDisplay.style.setProperty('--current-color', hex);
-  currentColor = hex;
 }
 
 colorPicker.addEventListener('input', () => {
@@ -657,7 +651,7 @@ downloadBtn.addEventListener('click', () => {
 saveJsonBtn.addEventListener('click', () => {
   const data = {
     app: 'AVR Pro Studios',
-    version: '2.0',
+    version: '2.1',
     canvas: { width: canvas.width, height: canvas.height },
     image: canvas.toDataURL('image/png'),
     timestamp: new Date().toISOString(),
@@ -742,15 +736,15 @@ fullscreenBtn.addEventListener('click', () => {
 document.addEventListener('fullscreenchange', () => setTimeout(resizeCanvas, 400));
 
 /* ========== ZOOM ========== */
-zoomIn.addEventListener('click', () => {
+zoomInBtn.addEventListener('click', () => {
   zoom = Math.min(3, zoom + 0.15);
   applyZoom();
 });
-zoomOut.addEventListener('click', () => {
+zoomOutBtn.addEventListener('click', () => {
   zoom = Math.max(0.4, zoom - 0.15);
   applyZoom();
 });
-zoomReset.addEventListener('click', () => {
+zoomResetBtn.addEventListener('click', () => {
   zoom = 1;
   applyZoom();
 });
@@ -772,16 +766,55 @@ themeBtn.addEventListener('click', () => {
   setStatus(document.body.classList.contains('light') ? 'Light mode' : 'Dark mode');
 });
 
-/* ========== MOBILE MENU ========== */
-menuToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
-  rightPanel.classList.toggle('open');
-});
-
-canvas.addEventListener('touchstart', () => {
+/* ========== MOBILE PANEL TOGGLES ========== */
+function closeAllPanels() {
   sidebar.classList.remove('open');
   rightPanel.classList.remove('open');
+  toolsToggle?.classList.remove('active');
+  settingsToggle?.classList.remove('active');
+}
+
+function toggleToolsPanel() {
+  const isOpen = sidebar.classList.contains('open');
+  closeAllPanels();
+  if (!isOpen) {
+    sidebar.classList.add('open');
+    toolsToggle?.classList.add('active');
+  }
+}
+
+function toggleSettingsPanel() {
+  const isOpen = rightPanel.classList.contains('open');
+  closeAllPanels();
+  if (!isOpen) {
+    rightPanel.classList.add('open');
+    settingsToggle?.classList.add('active');
+  }
+}
+
+toolsToggle?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleToolsPanel();
+});
+
+settingsToggle?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleSettingsPanel();
+});
+
+// Close panels when tapping canvas (only if not drawing)
+canvas.addEventListener('touchstart', () => {
+  if (window.innerWidth <= 768) closeAllPanels();
 }, { passive: true });
+
+// Close on outside click
+document.addEventListener('click', (e) => {
+  if (window.innerWidth > 768) return;
+  const inSidebar = sidebar.contains(e.target);
+  const inRight = rightPanel.contains(e.target);
+  const isToggle = e.target.closest('#toolsToggle') || e.target.closest('#settingsToggle');
+  if (!inSidebar && !inRight && !isToggle) closeAllPanels();
+});
 
 /* ========== KEYBOARD ========== */
 document.addEventListener('keydown', (e) => {
