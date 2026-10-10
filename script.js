@@ -95,43 +95,67 @@ window.addEventListener('load', () => {
   saveHistory();
 });
 
-/* ========== RESIZE ========== */
+/* ========== RESIZE — FULL SCREEN FIX ========== */
 function resizeCanvas() {
   const wrapper = canvas.parentElement;
-  const pad = 50;
-  const maxW = wrapper.clientWidth - pad;
-  const maxH = wrapper.clientHeight - pad;
-  const ratio = 16 / 10;
+  const isMobile = window.innerWidth <= 768;
+  const isLandscape = window.innerHeight < window.innerWidth;
 
-  let w = maxW;
-  let h = w / ratio;
-  if (h > maxH) { h = maxH; w = h * ratio; }
+  // Padding inside wrapper
+  const padX = isMobile ? 8 : 40;
+  const padY = isMobile ? 8 : 40;
 
+  const availableW = wrapper.clientWidth - padX;
+  const availableH = wrapper.clientHeight - padY;
+
+  // Get device pixel ratio for crisp rendering
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  // Canvas CSS size (fills available space)
+  let cssW, cssH;
+
+  if (isMobile) {
+    // On mobile: fill the entire wrapper (100%)
+    cssW = availableW;
+    cssH = availableH;
+  } else {
+    // On desktop: maintain 16:10 ratio
+    const ratio = 16 / 10;
+    cssW = availableW;
+    cssH = cssW / ratio;
+    if (cssH > availableH) {
+      cssH = availableH;
+      cssW = cssH * ratio;
+    }
+  }
+
+  // Save existing drawing
   const old = canvas.width > 0 ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
 
-  canvas.width = Math.floor(w);
-  canvas.height = Math.floor(h);
-  canvas.style.width = Math.floor(w) + 'px';
-  canvas.style.height = Math.floor(h) + 'px';
+  // Set actual canvas resolution (with DPR for retina crispness)
+  canvas.width = Math.floor(cssW * dpr);
+  canvas.height = Math.floor(cssH * dpr);
 
+  // Set CSS size
+  canvas.style.width = Math.floor(cssW) + 'px';
+  canvas.style.height = Math.floor(cssH) + 'px';
+
+  // Fill white background
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Restore old drawing scaled
   if (old) {
     const t = document.createElement('canvas');
-    t.width = old.width; t.height = old.height;
+    t.width = old.width;
+    t.height = old.height;
     t.getContext('2d').putImageData(old, 0, 0);
     ctx.drawImage(t, 0, 0, canvas.width, canvas.height);
   }
 
   drawGrid();
-  canvasSize.textContent = `${canvas.width} × ${canvas.height}`;
+  canvasSize.textContent = `${Math.floor(cssW)} × ${Math.floor(cssH)}`;
 }
-
-window.addEventListener('resize', () => {
-  clearTimeout(window._rz);
-  window._rz = setTimeout(resizeCanvas, 250);
-});
 
 /* ========== GRID ========== */
 function drawGrid() {
