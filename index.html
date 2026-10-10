@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0a0e1a">
   <title>AVR Pro Studios — Create. Draw. Inspire.</title>
   <link rel="stylesheet" href="style.css">
@@ -26,12 +26,9 @@
               <stop offset="100%" stop-color="#a855f7" stop-opacity="0.1"/>
             </linearGradient>
           </defs>
-          <!-- Outer ring -->
           <circle cx="120" cy="120" r="105" fill="none" stroke="url(#ringGrad)" stroke-width="2" class="ring-outer"/>
           <circle cx="120" cy="120" r="88" fill="none" stroke="url(#avrGrad)" stroke-width="3" class="ring-inner" stroke-dasharray="550" stroke-dashoffset="550"/>
-          <!-- Glow -->
           <circle cx="120" cy="120" r="80" fill="url(#ringGrad)" opacity="0.06" class="glow"/>
-          <!-- AVR Text -->
           <text x="120" y="140" text-anchor="middle" font-size="78" font-weight="900" fill="url(#avrGrad)" font-family="Arial Black, sans-serif" letter-spacing="2">AVR</text>
         </svg>
       </div>
@@ -41,7 +38,7 @@
         <span></span><span></span><span></span>
       </div>
     </div>
-    <div class="splash-footer">© AVR Pro Studios — v2.0</div>
+    <div class="splash-footer">© AVR Pro Studios — v2.1</div>
   </div>
 
   <!-- ===== MAIN APP ===== -->
@@ -78,11 +75,12 @@
       <div class="topbar-actions">
         <button class="icon-btn" id="themeBtn" title="Toggle Theme">🌗</button>
         <button class="icon-btn" id="helpBtn" title="Help">❓</button>
-        <div class="menu-toggle" id="menuToggle">☰</div>
+        <button class="icon-btn tools-btn" id="toolsToggle" title="Tools">🖌️</button>
+        <button class="icon-btn settings-btn" id="settingsToggle" title="Settings">⚙️</button>
       </div>
     </header>
 
-    <!-- LEFT SIDEBAR -->
+    <!-- LEFT SIDEBAR — TOOLS -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-scroll">
         <div class="side-section">
@@ -161,7 +159,7 @@
       </div>
     </main>
 
-    <!-- RIGHT PANEL -->
+    <!-- RIGHT PANEL — SETTINGS -->
     <aside class="right-panel" id="rightPanel">
       <div class="panel-scroll">
 
@@ -247,7 +245,7 @@
       <div class="bottom-left">
         <div class="info-chip">🎨 <span id="toolName">Brush</span></div>
         <div class="info-chip">📍 <span id="coords">0, 0</span></div>
-        <div class="info-chip">📐 <span id="canvasSize">1200 × 750</span></div>
+        <div class="info-chip">📐 <span id="canvasSize">—</span></div>
       </div>
       <div class="bottom-right">
         <span class="credit">Crafted with <span class="heart">❤</span> by <b>AVR Pro Studios</b></span>
@@ -266,7 +264,9 @@
       </div>
       <div class="modal-body">
         <h3>🎨 Tools</h3>
-        <p>Choose tools from the left sidebar. Each tool has unique behavior — Brush for smooth lines, Pencil for sharp edges, Marker for bold strokes, Neon for glowing effects.</p>
+        <p>Choose tools from the tools panel. Each tool has unique behavior — Brush for smooth lines, Pencil for sharp edges, Marker for bold strokes, Neon for glowing effects.</p>
+        <h3>📱 Mobile Usage</h3>
+        <p>Tap <b>🖌️</b> to open Tools panel (slides from top). Tap <b>⚙️</b> to open Settings panel (slides from bottom). Tap canvas to close both.</p>
         <h3>⌨️ Shortcuts</h3>
         <p>Press <kbd>B</kbd> Brush, <kbd>N</kbd> Pencil, <kbd>M</kbd> Marker, <kbd>E</kbd> Eraser, <kbd>L</kbd> Line, <kbd>R</kbd> Rect, <kbd>C</kbd> Circle, <kbd>F</kbd> Fill.</p>
         <h3>💾 Save & Load</h3>
@@ -282,7 +282,6 @@
     </div>
   </div>
 
-  <!-- Hidden inputs -->
   <input type="file" id="fileJsonInput" accept=".json" style="display:none">
   <input type="file" id="fileImageInput" accept="image/*" style="display:none">
 
